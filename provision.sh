@@ -1,7 +1,7 @@
 #!/bin/bash
 
 yum install -y epel-release vim nano
-chmod +x /opt/pamScript.sh
+chmod +x /vagrant/pamScript.sh
 
 # Добавляем юзеров с паролями и даем нескольким доп группу admin 
 useradd user1 && useradd user2 && useradd useradmin
