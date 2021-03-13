@@ -25,4 +25,4 @@ if [[ `date +%u` > 5 ]]
 fi
 ```
 
-PS файлы Script/Provision не используются. 
+PS файлы Script/Provision не используются. В финале все скрипты написал в Vagrantfile.
