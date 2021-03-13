@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
       config.vm.provision "file", source: "./pamScript.sh", destination: "/opt/"
     end
 
-      config.vm.provision "shell", path: "script.sh"
+      config.vm.provision "shell", path: "provision.sh"
     end
 
   end
