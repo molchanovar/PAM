@@ -1,36 +1,41 @@
 # -*- mode: ruby -*-
-# vi: set ft=ruby :
+# vim: set ft=ruby :
 
 MACHINES = {
-  :"pam-test" => {
-              :box_name => "centos/7",
-              :cpus => 2,
-              :memory => 1024,
-              :net => [],
-              :forwarded_port => []
-            }
+  :pam => {
+        :box_name => "centos/7",
+        :ip_addr => '192.168.50.150',
+		},
 }
 
-Vagrant.configure(2) do |config|
-  
+Vagrant.configure("2") do |config|
+
   MACHINES.each do |boxname, boxconfig|
-    
-     config.vm.define boxname do |box|
-           box.vm.box = boxconfig[:box_name]
-      	   box.vm.host_name = boxname.to_s
-      if boxconfig.key?(:net)
-        boxconfig[:net].each do |ipconf|
-          box.vm.network "private_network", ipconf
-        end
-      end
-      if boxconfig.key?(:forwarded_port)
-        boxconfig[:forwarded_port].each do |port|
-          box.vm.network "forwarded_port", port
-        end
-      end
-      box.vm.provider "virtualbox" do |v|
-        v.memory = boxconfig[:memory]
-        v.cpus = boxconfig[:cpus]
-      end
-   end
+
+      config.vm.define boxname do |box|
+
+          box.vm.box = boxconfig[:box_name]
+          box.vm.host_name = boxname.to_s
+
+          box.vm.network "private_network", ip: boxconfig[:ip_addr]
+
+          box.vm.provider :virtualbox do |vb|
+            	  vb.customize ["modifyvm", :id, "--memory", "512"]
+            	  vb.customize ["modifyvm", :id, "--cpus", "1"]
+		  end
+
+      box.vm.provision "shell", inline: <<-SHELL
+      mkdir -p ~root/.ssh; cp ~vagrant/.ssh/auth* ~root/.ssh
+      sed -i '65s/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+      systemctl restart sshd
+    SHELL
+    end
+
+      config.vm.provision "file", source: "./pamScript.sh", destination: "/opt/"
+    end
+
+      config.vm.provision "shell", path: "script.sh"
+    end
+
+  end
 end
