@@ -31,9 +31,9 @@ Vagrant.configure("2") do |config|
       systemctl restart sshd
     SHELL
 
-   box.vm.provision "file", source: "./pamScript.sh", destination: "/vagrant/pamScript.sh"
+     box.vm.provision "file", source: "./pamScript.sh", destination: "/vagrant/pamScript.sh"
+     box.vm.provision "shell", path: "./provision.sh"
 
-   box.vm.provision "shell", path: "./provision.sh"
-    end
+     end
   end
 end
