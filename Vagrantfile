@@ -26,20 +26,20 @@ Vagrant.configure("2") do |config|
       
     
       box.vm.provision "shell", inline: <<-SHELL
-      mkdir -p ~root/.ssh; cp ~vagrant/.ssh/auth* ~root/.ssh
-      sed -i '65s/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
-      systemctl restart sshd
+mkdir -p ~root/.ssh; cp ~vagrant/.ssh/auth* ~root/.ssh
+sed -i '65s/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+systemctl restart sshd
 
-      yum install -y epel-release vim nano
+yum install -y epel-release vim nano
 
- # Добавляем юзеров с паролями и даем нескольким доп группу admin 
-      useradd user1 && useradd user2 && useradd useradmin
-      echo "123" | sudo passwd --stdin user1 && echo "123" | sudo passwd --stdin user2 && echo "123" | sudo passwd --stdin useradmin 
-      groupadd admin  
-      usermod -G admin useradmin
-      usermod -G admin user1 
+# Добавляем юзеров с паролями и даем нескольким доп группу admin 
+useradd user1 && useradd user2 && useradd useradmin
+echo "123" | sudo passwd --stdin user1 && echo "123" | sudo passwd --stdin user2 && echo "123" | sudo passwd --stdin useradmin 
+groupadd admin  
+usermod -G admin useradmin
+usermod -G admin user1 
 
- # Скрипт для PAM (проверка что юзер есть в группе admin)
+# Скрипт для PAM (проверка что юзер есть в группе admin)
 cat <<'EOT' > /etc/pam_script
 #!/bin/bash
 if [[ `grep $PAM_USER /etc/group | grep 'admin'` ]]
@@ -52,10 +52,9 @@ exit 1
 fi
 EOT
 
- # Задаем PAM проверять юзеров скриптом
-      sed -i "8i account    required     pam_exec.so     /opt/pamScript.sh "  /etc/pam.d/sshd
-
-      chmod 777 /opt/pamScript.sh
+# Задаем PAM проверять юзеров скриптом
+sed -i "8i account    required     pam_exec.so     /opt/pamScript.sh "  /etc/pam.d/sshd
+chmod 777 /opt/pamScript.sh
 
 SHELL
 
