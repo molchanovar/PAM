@@ -22,20 +22,18 @@ Vagrant.configure("2") do |config|
           box.vm.provider :virtualbox do |vb|
             	  vb.customize ["modifyvm", :id, "--memory", "512"]
             	  vb.customize ["modifyvm", :id, "--cpus", "1"]
-		  end
-
+		      end
+      
+    
       box.vm.provision "shell", inline: <<-SHELL
       mkdir -p ~root/.ssh; cp ~vagrant/.ssh/auth* ~root/.ssh
       sed -i '65s/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
       systemctl restart sshd
     SHELL
-    end
 
-      config.vm.provision "file", source: "./pamScript.sh", destination: "/opt/"
-    end
+   box.vm.provision "file", source: "./pamScript.sh", destination: "/vagrant/pamScript.sh"
 
-      config.vm.provision "shell", path: "provision.sh"
+   box.vm.provision "shell", path: "./provision.sh"
     end
-
   end
 end
