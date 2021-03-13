@@ -40,17 +40,17 @@ Vagrant.configure("2") do |config|
       usermod -G admin user1 
 
  # Скрипт для PAM (проверка что юзер есть в группе admin)
-      cat <<'EOT' > /opt/pamScript.sh
-      #!/bin/bash
-      if [[ `grep $PAM_USER /etc/group | grep 'admin'` ]]
-      	then
-      		exit 0
-      fi
-      if [[ `date +%u` > 5 ]]
-      	then
-      		exit 1
-      fi
-      EOT
+cat <<'EOT' > /etc/pam_script
+#!/bin/bash
+if [[ `grep $PAM_USER /etc/group | grep 'admin'` ]]
+then
+exit 0
+fi
+if [[ `date +%u` > 5 ]]
+then
+exit 1
+fi
+EOT
 
  # Задаем PAM проверять юзеров скриптом
       sed -i "8i account    required     pam_exec.so     /opt/pamScript.sh "  /etc/pam.d/sshd
