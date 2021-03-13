@@ -19,3 +19,5 @@ if [[ `date +%u` > 5 ]]
     exit 1
 fi
 ```
+
+PS файлы Script/Provision не используются. 
