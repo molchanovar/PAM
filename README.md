@@ -6,4 +6,16 @@ Pluggable Authentication Modules
 Запрет для всех пользователей, кроме группы admin логин в выходные (суббота и воскресенье), без учета праздников
 
 ### Реализовано скриптом
-Скрипт `pamScript.sh` проверяет принадлежность пользователя к группе `grep $PAM_USER /etc/group | grep 'admin'` и номер дня в неделе (будни <= 5, выходные > 5 : `date +%u > 5`)
+Скрипт проверяет принадлежность пользователя к группе `grep $PAM_USER /etc/group | grep 'admin'` и номер дня в неделе (будни <= 5, выходные > 5 : `date +%u > 5`)
+
+```
+#!/bin/bash
+if [[ `grep $PAM_USER /etc/group | grep 'admin'` ]]
+then
+exit 0
+fi
+if [[ `date +%u` > 5 ]]
+then
+exit 1
+fi
+```
