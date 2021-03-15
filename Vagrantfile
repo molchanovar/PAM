@@ -40,7 +40,7 @@ usermod -G admin useradmin
 usermod -G admin user1 
 
 # Скрипт для PAM (проверка что юзер есть в группе admin)
-cat <<'EOT' > /etc/pam_script
+cat <<'EOT' > /opt/pamScript.sh
 #!/bin/bash
 if [[ `grep $PAM_USER /etc/group | grep 'admin'` ]]
 then
