@@ -26,3 +26,19 @@ fi
 ```
 
 PS файлы Script/Provision не используются. В финале все скрипты написал в Vagrantfile.
+
+
+#### Тесты скрипта
+Проверка в ПН (date + %u = 1)
+Лог событий `/var/log/secure` - user1 состоит в группе admin / user2 - нет:
+
+```
+user2 - blocked:
+Mar 15 14:31:47 localhost sshd[3440]: pam_exec(sshd:account): /opt/pamScript.sh failed: exit code 1                      
+Mar 15 14:31:47 localhost sshd[3440]: Failed password for user2 from 10.0.2.2 port 50199 ssh2                            
+Mar 15 14:31:47 localhost sshd[3440]: fatal: Access denied for user user2 by PAM account configuration [preauth]         
+
+user1 - passed
+Mar 15 14:32:34 localhost sshd[3450]: Accepted password for user1 from 10.0.2.2 port 50201 ssh2                          
+Mar 15 14:32:34 localhost sshd[3450]: pam_unix(sshd:session): session opened for user user1 by (uid=0)  
+```
